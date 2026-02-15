@@ -8,6 +8,9 @@ WIDTH = info.current_w
 HEIGHT = info.current_h
 print(WIDTH, HEIGHT)
 
+screen = pg.display.set_mode((WIDTH, HEIGHT))
+pg.display.set_caption("Cossacks 4")
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -18,8 +21,6 @@ buttonFont = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 35)
 background = pg.image.load("assets/img/background.png").convert_alpha()
 
 # --- General stuff --- #
-screen = pg.display.set_mode((WIDTH, HEIGHT))
-pg.display.set_caption("Cossacks 4")
 
 def refresh():
     pg.display.flip()
