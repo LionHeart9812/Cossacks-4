@@ -6,6 +6,7 @@ pg.init()
 info = pg.display.Info()
 WIDTH = info.current_w
 HEIGHT = info.current_h
+print(WIDTH, HEIGHT)
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -13,6 +14,8 @@ RED = (255, 0, 0)
 
 startMenuFont = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 120)
 buttonFont = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 35)
+
+background = pg.image.load("assets/img/background.png").convert_alpha()
 
 # --- General stuff --- #
 screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -51,7 +54,7 @@ gameRunning = True
 
 # --- Drawing Variabels --- #
 def drawStart():
-    screen.fill(WHITE)
+    screen.blit(background, (0,0))
     Text("COSSACKS 4", startMenuFont, BLACK, WIDTH / 2, 250, True)
     start, startBorder = Button(WIDTH / 2, HEIGHT / 2 + 20, 250, 90, 150, 150, 150, "START", buttonFont, BLACK, 10)
     settings, settingsBorder = Button(WIDTH / 2, HEIGHT / 2 + 200, 250, 90, 150, 150, 150, "SETTINGS", buttonFont, BLACK, 10)
