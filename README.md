@@ -8,6 +8,7 @@ This is my newest python project using pygame! I try to recreate the popular RTS
 - `pygame` -- Visit [pygame.org](https://www.pygame.org/news) to see more!
 - `time` -- Python library for working with time
 - `random` -- Python library for working with "randomness"
+- [kenney.nl](https://kenney.nl) -- Library for free assets and Tilemaps
 
 ## ⬇️ How to download?
 Beacause this game is still in beta and the game isn't out yet, no installation is provided. 
