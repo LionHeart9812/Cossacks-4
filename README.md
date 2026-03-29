@@ -12,4 +12,4 @@ This is my newest python project using pygame! I try to recreate the popular RTS
 
 ## ⬇️ How to download?
 Beacause this game is still in beta and the game isn't out yet, no installation is provided. 
-With version 1.0 a .exe file as well as an installation guide with conda will be in the release tab
+With version 1.0 a .exe file will be in the release tab
