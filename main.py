@@ -9,9 +9,17 @@ gameRunning = True
 currentScreen = "start"
 i = 1
 knechtX, knechtY = 0, 0
-countdown = 3
 drawCountdown = True
 gamePaused = False
+
+buildings = {
+    "townhall": False,
+    "mill": False,
+    "ironMine": False,
+    "goldMine": False,
+    "knightBarracks": False,
+    "archersBarracks": False,
+}
 
 # Timer(s)
 clock = pg.time.Clock()
@@ -42,7 +50,13 @@ background = pg.image.load("assets/img/background.png").convert_alpha()
 
 # Buildings and Placeholders
 mill_placeholder = pg.image.load("assets/img/farm_placeholder.png").convert_alpha()
-mill_placeholder = pg.transform.scale(mill_placeholder, (1000, 1000))
+mill_placeholder = pg.transform.scale(mill_placeholder, (1536 / 2, 1536 / 2))
+
+townhall_placeholder = pg.image.load("assets/img/rathaus_placeholder.png").convert_alpha()
+townhall_placeholder = pg.transform.scale(townhall_placeholder, (768 / 2, 1536 / 2))
+
+mine_placeholder = pg.image.load("assets/img/mine_placeholder.png").convert_alpha()
+mine_placeholder = pg.transform.scale(mine_placeholder, (1536 / 2, 1536 / 2))
 
 # Hoomans
 knecht = pg.image.load("assets/img/knecht.png").convert_alpha()
@@ -106,8 +120,11 @@ def drawGame(countDownLocal):
     screen.blit(background, (0, 0))
 
     # Drawing all the Placeholders, when countdown ended
-    if countDownLocal == False:
-        screen.blit(mill_placeholder, (WIDTH / 2, HEIGHT / 2))
+    if countDownLocal == False and all(value is False for value in buildings.values()):
+        mill = screen.blit(mill_placeholder, (-100, -50))
+        townhall = screen.blit(townhall_placeholder, (175, -325))
+        ironMine = screen.blit(mine_placeholder, (-300 , 125))
+        goldMine = screen.blit(mine_placeholder, (100 , 125))
 
 ### Drawing the settings screen
 def drawSettings():
@@ -139,7 +156,7 @@ while gameRunning:
 
             if currentScreen == "start":
                 if start.collidepoint(mousePOS) or startBorder.collidepoint(mousePOS):
-                    countdown = 3
+                    countdown = 1
                     drawCountdown = True
                     currentScreen = "game"
                     pg.time.set_timer(ONE_SECOND_EVENT, 1000)
