@@ -89,12 +89,14 @@ def generateNewDirection():
 def drawStart(x, y):
     screen.blit(background, (0,0))
     Text("LANDSKNECHT", startMenuFont, BLACK, WIDTH / 2, 250, True)
-    start, startBorder = Button(WIDTH / 2, HEIGHT / 2 + 20, 250, 90, 150, 150, 150, "START", buttonFont, BLACK, 10)
-    settings, settingsBorder = Button(WIDTH / 2, HEIGHT / 2 + 200, 250, 90, 150, 150, 150, "SETTINGS", buttonFont, BLACK, 10)
+    start, startBorder = Button(WIDTH / 2, HEIGHT / 2 - 25, 300, 90, 154, 103, 53, "START", buttonFont, BLACK, 10)
+    settings, settingsBorder = Button(WIDTH / 2, HEIGHT / 2 + 100, 300, 90, 154, 103, 53, "SETTINGS", buttonFont, BLACK, 10)
+    quit, quitBorder = Button(WIDTH / 2, HEIGHT / 2 + 225, 300, 90, 154, 103, 53, "QUIT", buttonFont, BLACK, 10)
+    
 
     screen.blit(knecht, (x, y))
 
-    return start, startBorder, settings, settingsBorder
+    return start, startBorder, settings, settingsBorder, quit, quitBorder
 
 ### Drawing the main game screen
 def drawGame(countDownLocal):
@@ -111,29 +113,36 @@ def drawSettings():
 
 # ----------- Game ----------- #
 minDirectionX, minDirectionY, maxDirectionX, maxDirectionY, knechtX, knechtY = generateNewDirection()
-start, startBorder, settings, settingsBorder = drawStart(knechtX, knechtY)
+start, startBorder, settings, settingsBorder, quit, quitBorder = drawStart(knechtX, knechtY)
 
 # Mainloop
 while gameRunning:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             gameRunning = False
+
+        # Start menu buttons
         elif event.type == pg.MOUSEBUTTONDOWN:
             mousePOS = pg.mouse.get_pos()
+
             if currentScreen == "start":
                 if start.collidepoint(mousePOS) or startBorder.collidepoint(mousePOS):
                     currentScreen = "game"
                     pg.time.set_timer(ONE_SECOND_EVENT, 1000)
                     drawGame(drawCountdown)
+
                 elif settings.collidepoint(mousePOS) or settingsBorder.collidepoint(mousePOS):
                     currentScreen = "settings"
                     drawSettings()
+
+                elif quit.collidepoint(mousePOS) or quitBorder.collidepoint(mousePOS):
+                    gameRunning = False
 
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE and currentScreen == "settings":
                 currentScreen = "start"
 
-        elif event.type == ONE_SECOND_EVENT and currentScreen == "game":
+        elif event.type == ONE_SECOND_EVENT and currentScreen == "game" and drawCountdown == True:
             countdown -= 1
 
         elif countdown <= 0:
