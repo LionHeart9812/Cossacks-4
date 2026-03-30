@@ -117,8 +117,8 @@ def drawSettings():
 def drawPause():
     screen.blit(background, (0,0))
     Text("PAUSE", startMenuFont, BLACK, WIDTH / 2, 250, True)
-    resume, resumeBorder = Button(WIDTH / 2, HEIGHT / 2 , 300, 90, 154, 103, 53, "RESUME", buttonFont, BLACK, 10)
-    gameQuit, gameQuitBorder = Button(WIDTH / 2, HEIGHT / 2 + 200, 300, 90, 154, 103, 53, "QUIT GAME", buttonFont, BLACK, 10)
+    resume, resumeBorder = Button(WIDTH / 2, HEIGHT / 2 + 25, 300, 90, 154, 103, 53, "RESUME", buttonFont, BLACK, 10)
+    gameQuit, gameQuitBorder = Button(WIDTH / 2, HEIGHT / 2 + 150, 300, 90, 154, 103, 53, "QUIT GAME", buttonFont, BLACK, 10)
     refresh()
 
     return resume, resumeBorder, gameQuit, gameQuitBorder
@@ -139,9 +139,12 @@ while gameRunning:
 
             if currentScreen == "start":
                 if start.collidepoint(mousePOS) or startBorder.collidepoint(mousePOS):
+                    countdown = 3
+                    drawCountdown = True
                     currentScreen = "game"
                     pg.time.set_timer(ONE_SECOND_EVENT, 1000)
                     drawGame(drawCountdown)
+                    print(countdown)
 
                 elif settings.collidepoint(mousePOS) or settingsBorder.collidepoint(mousePOS):
                     currentScreen = "settings"
@@ -155,8 +158,6 @@ while gameRunning:
                     gamePaused = False
 
                 elif gameQuit.collidepoint(mousePOS) or gameQuitBorder.collidepoint(mousePOS):
-                    countdown = 3
-                    drawCountdown = False
                     gamePaused = False
                     currentScreen = "start"
 
@@ -169,7 +170,7 @@ while gameRunning:
 
         elif event.type == ONE_SECOND_EVENT and currentScreen == "game" and drawCountdown == True:
             countdown -= 1
-
+            print(countdown)
             if countdown <= 0:
                 drawCountdown = False
 
