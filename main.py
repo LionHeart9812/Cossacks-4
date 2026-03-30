@@ -11,8 +11,11 @@ i = 1
 knechtX, knechtY = 0, 0
 countdown = 3
 drawCountdown = True
+gamePaused = False
 
 # Timer(s)
+clock = pg.time.Clock()
+
 KNECHT_MOVE = pg.event.custom_type()
 pg.time.set_timer(KNECHT_MOVE, 200)
 
@@ -111,6 +114,15 @@ def drawSettings():
     screen.fill(WHITE)
     Text("Dis is settings", startMenuFont, BLACK, WIDTH / 2, HEIGHT / 2, True)
 
+def drawPause():
+    screen.blit(background, (0,0))
+    Text("PAUSE", startMenuFont, BLACK, WIDTH / 2, 250, True)
+    resume, resumeBorder = Button(WIDTH / 2, HEIGHT / 2 , 300, 90, 154, 103, 53, "RESUME", buttonFont, BLACK, 10)
+    gameQuit, gameQuitBorder = Button(WIDTH / 2, HEIGHT / 2 + 200, 300, 90, 154, 103, 53, "QUIT GAME", buttonFont, BLACK, 10)
+    refresh()
+
+    return resume, resumeBorder, gameQuit, gameQuitBorder
+
 # ----------- Game ----------- #
 minDirectionX, minDirectionY, maxDirectionX, maxDirectionY, knechtX, knechtY = generateNewDirection()
 start, startBorder, settings, settingsBorder, quit, quitBorder = drawStart(knechtX, knechtY)
@@ -138,16 +150,29 @@ while gameRunning:
                 elif quit.collidepoint(mousePOS) or quitBorder.collidepoint(mousePOS):
                     gameRunning = False
 
+            if currentScreen == "game" and gamePaused:
+                if resume.collidepoint(mousePOS) or resumeBorder.collidepoint(mousePOS):
+                    gamePaused = False
+
+                elif gameQuit.collidepoint(mousePOS) or gameQuitBorder.collidepoint(mousePOS):
+                    countdown = 3
+                    drawCountdown = False
+                    gamePaused = False
+                    currentScreen = "start"
+
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE and currentScreen == "settings":
                 currentScreen = "start"
+            
+            elif event.key == pg.K_ESCAPE and currentScreen == "game":
+                gamePaused = True
 
         elif event.type == ONE_SECOND_EVENT and currentScreen == "game" and drawCountdown == True:
             countdown -= 1
 
-        elif countdown <= 0:
-            time.sleep(.2)
-            drawCountdown = False
+            if countdown <= 0:
+                drawCountdown = False
+
 
         # Landsknecht logic 
         elif currentScreen == "start" and event.type == KNECHT_MOVE:
@@ -170,12 +195,21 @@ while gameRunning:
     screen.fill((0,0,0))
     if currentScreen == "start":
         drawStart(knechtX, knechtY)
+
     elif currentScreen == "settings":
         drawSettings()
+
     elif currentScreen == "game":
         drawGame(drawCountdown)
+        
         if drawCountdown == True:
             Text("Game starts in: " + str(countdown), startMenuFont, BLACK, WIDTH / 2, HEIGHT / 2, True)
 
+        if gamePaused == True:
+            resume, resumeBorder, gameQuit, gameQuitBorder = drawPause()
+
+
     refresh()
-    pg.time.Clock().tick(24)  # ~24 FPS
+    clock.tick(24)  # ~24 FPS
+
+print("Window closed")
