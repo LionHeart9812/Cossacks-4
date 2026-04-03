@@ -11,6 +11,7 @@ i = 1
 knechtX, knechtY = 0, 0
 drawCountdown = True
 gamePaused = False
+hoverText = None
 
 # Timer(s)
 clock = pg.time.Clock()
@@ -31,40 +32,42 @@ pg.display.set_caption("Landsknecht - RTS")
 
 WHITE = (255, 255, 255)
 GRAY = (100, 100, 100)
+LIGHTGRAY = (200, 200, 200)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 
 startMenuFont = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 120)
 buttonFont = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 35)
-toolTipFont = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 15)
+toolTipFont_M = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 15)
+toolTipFont_L = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 25)
 
 background = pg.image.load("assets/img/background.png").convert_alpha()
 
 # Buildings and Placeholders
-mill_placeholder = ["assets/img/farm_placeholder.png", (223, 229)]
-mill_build = ["assets/img/mill.png", (525, 527)]
+mill_placeholder = ["assets/img/farm_placeholder.png", (229 / 2, 228 / 2)]
+mill_build = ["assets/img/mill.png", (525 / 2, 527 / 2)]
 mill = pg.image.load(mill_placeholder[0]).convert_alpha()
 mill = pg.transform.scale(mill, mill_placeholder[1])
-mill_rect = mill.get_rect(topleft=(-100, -50))
+mill_rect = mill.get_rect(topleft=(260, 350))
 
-townhall_placeholder = ["assets/img/rathaus_placeholder.png", (575, 433)]
-townhall_build = ["assets/img/rathaus.png", (575, 430)]
+townhall_placeholder = ["assets/img/rathaus_placeholder.png", (575 / 2, 433 / 2)]
+townhall_build = ["assets/img/rathaus.png", (575 / 2, 430 / 2)]
 townhall = pg.image.load(townhall_placeholder[0]).convert_alpha()
 townhall = pg.transform.scale(townhall, townhall_placeholder[1])
-townhall_rect = townhall.get_rect(topleft=(175, -325))
+townhall_rect = townhall.get_rect(topleft=(175, 50))
 
-mine_placeholder = ["assets/img/mine_placeholder.png", (239, 238)]
-mine_build = ["assets/img/mine.png", (335, 333)]
+mine_placeholder = ["assets/img/mine_placeholder.png", (239 / 2, 238 / 2)]
+mine_build = ["assets/img/mine.png", (335 / 2, 333 / 2)]
 mine = pg.image.load(mine_placeholder[0]).convert_alpha()
 mine = pg.transform.scale(mine, mine_placeholder[1])
-ironMine_rect = mine.get_rect(topleft=(-300 , 125))
-goldMine_rect = mine.get_rect(topleft=(100 , 125))
+ironMine_rect = mine.get_rect(topleft=(100, 550))
+goldMine_rect = mine.get_rect(topleft=(415, 550))
 
 buildings = {
-    "mill": [False, mill_rect],
-    "townhall": [False, townhall_rect],
-    "ironMine": [False, ironMine_rect],
-    "goldMine": [False, goldMine_rect],
+    "Mill": [False, mill_rect],
+    "Townhall": [False, townhall_rect],
+    "Iron mine": [False, ironMine_rect],
+    "Gold Mine": [False, goldMine_rect],
 }
 
 # Hoomans
@@ -126,10 +129,11 @@ def drawStart(x, y):
 
 ### Drawing ToolTip if hovering above building
 def drawToolTip(buildingName, buildStatus, x, y):
-    toolTipRect = pg.Rect(x, y, 100, 50)
-    pg.draw.rect(screen, GRAY, toolTipRect, 0)
+    toolTipRect = pg.Rect(x - 125, y - 20, 250, 100)
+    pg.draw.rect(screen, LIGHTGRAY, toolTipRect, 0, 10)
 
-    Text(buildingName, toolTipFont, BLACK, x + 50, y, True)
+    Text(buildingName, toolTipFont_L, BLACK, x, y, True)
+    Text(f"Building is Build: {buildStatus}", toolTipFont_M, BLACK, x, y + 35, True)
 
 ### Drawing the main game screen
 def drawGame(countDownLocal):
@@ -169,8 +173,6 @@ while gameRunning:
         # Start menu buttons
         elif event.type == pg.MOUSEBUTTONDOWN:
             mousePOS = pg.mouse.get_pos()
-            mousePOS_X = pg.mouse.get_pos()[0]
-            mousePOS_Y = pg.mouse.get_pos()[1]
 
             if currentScreen == "start":
                 if start.collidepoint(mousePOS) or startBorder.collidepoint(mousePOS):
@@ -196,14 +198,20 @@ while gameRunning:
                     gamePaused = False
                     currentScreen = "start"
 
-            elif currentScreen == "game":
+        # Tooltip
+        elif event.type == pg.MOUSEMOTION and not drawCountdown and not gamePaused:  
+            mousePOS = pg.mouse.get_pos() 
+            mousePOS_X = pg.mouse.get_pos()[0]
+            mousePOS_Y = pg.mouse.get_pos()[1]        
+            hoverText = None
+
+            if currentScreen == "game":
                 for name, value in buildings.items():
-                    print(value[1].collidepoint(mousePOS))
-                    print(value[1], mousePOS)
-                    # if value[1].collidepoint(mousePOS):
-                    #     drawToolTip(name, str(value[0]), mousePOS_X, mousePOS_Y)
-                    # else:
-                    #     pass
+                    if value[1].collidepoint(mousePOS):
+                        hoverText = name
+                        hoverValue = value[0]
+                        break
+
 
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE and currentScreen == "settings":
@@ -253,6 +261,8 @@ while gameRunning:
         if gamePaused == True:
             resume, resumeBorder, gameQuit, gameQuitBorder = drawPause()
 
+        if hoverText:
+            drawToolTip(hoverText, hoverValue, mousePOS_X, mousePOS_Y)
 
     refresh()
     clock.tick(24)  # ~24 FPS
