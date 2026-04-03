@@ -1,8 +1,18 @@
 import pygame as pg
 import time
 import random
+import os
+import sys
 
 pg.init()
+
+def resource_path(relative_path):
+    """ Pfade für Entwicklung + EXE (PyInstaller) """
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        base_path = sys._MEIPASS # type: ignore
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_path, relative_path)
 
 # --- Global stuff --- #
 gameRunning = True
@@ -36,28 +46,28 @@ LIGHTGRAY = (200, 200, 200)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 
-startMenuFont = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 120)
-buttonFont = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 35)
-toolTipFont_M = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 15)
-toolTipFont_L = pg.font.Font("assets/fonts/UncialAntiqua-Regular.ttf", 25)
+startMenuFont = pg.font.Font(resource_path("assets/fonts/UncialAntiqua-Regular.ttf"), 120)
+buttonFont = pg.font.Font(resource_path("assets/fonts/UncialAntiqua-Regular.ttf"), 35)
+toolTipFont_M = pg.font.Font(resource_path("assets/fonts/UncialAntiqua-Regular.ttf"), 15)
+toolTipFont_L = pg.font.Font(resource_path("assets/fonts/UncialAntiqua-Regular.ttf"), 25)
 
-background = pg.image.load("assets/img/background.png").convert_alpha()
+background = pg.image.load(resource_path("assets/img/background.png")).convert_alpha()
 
 # Buildings and Placeholders
-mill_placeholder = ["assets/img/farm_placeholder.png", (229 / 2, 228 / 2)]
-mill_build = ["assets/img/mill.png", (525 / 2, 527 / 2)]
+mill_placeholder = [resource_path("assets/img/farm_placeholder.png"), (229 / 2, 228 / 2)]
+mill_build = [resource_path("assets/img/mill.png"), (525 / 2, 527 / 2)]
 mill = pg.image.load(mill_placeholder[0]).convert_alpha()
 mill = pg.transform.scale(mill, mill_placeholder[1])
 mill_rect = mill.get_rect(topleft=(260, 350))
 
-townhall_placeholder = ["assets/img/rathaus_placeholder.png", (575 / 2, 433 / 2)]
-townhall_build = ["assets/img/rathaus.png", (575 / 2, 430 / 2)]
+townhall_placeholder = [resource_path("assets/img/rathaus_placeholder.png"), (575 / 2, 433 / 2)]
+townhall_build = [resource_path("assets/img/rathaus.png"), (575 / 2, 430 / 2)]
 townhall = pg.image.load(townhall_placeholder[0]).convert_alpha()
 townhall = pg.transform.scale(townhall, townhall_placeholder[1])
 townhall_rect = townhall.get_rect(topleft=(175, 50))
 
-mine_placeholder = ["assets/img/mine_placeholder.png", (239 / 2, 238 / 2)]
-mine_build = ["assets/img/mine.png", (335 / 2, 333 / 2)]
+mine_placeholder = [resource_path("assets/img/mine_placeholder.png"), (239 / 2, 238 / 2)]
+mine_build = [resource_path("assets/img/mine.png"), (335 / 2, 333 / 2)]
 mine = pg.image.load(mine_placeholder[0]).convert_alpha()
 mine = pg.transform.scale(mine, mine_placeholder[1])
 ironMine_rect = mine.get_rect(topleft=(100, 550))
@@ -71,7 +81,7 @@ buildings = {
 }
 
 # Hoomans
-knecht = pg.image.load("assets/img/knecht.png").convert_alpha()
+knecht = pg.image.load(resource_path("assets/img/knecht.png")).convert_alpha()
 knecht = pg.transform.scale(knecht, (64, 64))
 
 # --- General stuff --- #
