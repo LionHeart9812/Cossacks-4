@@ -3,7 +3,7 @@ This is my newest python project using pygame! I try to recreate the popular RTS
 
 ## 🐍 What did I work with?
 - Visual Studio Code IDE
-- `conda` -- Virtual enviorement
+- `venv` -- Virtual enviorement
 - `python` -- Version 3.14 as well as the python extension(s) in VSCode
 - `pygame` -- Visit [pygame.org](https://www.pygame.org/news) to see more!
 - `os & sys` -- Python library for the function _(line 8)_ `resource_path(relative_path)` to create .exe files with correct path
@@ -17,5 +17,5 @@ This is my newest python project using pygame! I try to recreate the popular RTS
 4. _Well this is awkward..._ There isn't more to see right now! So wait for future updates!
 
 ## ⬇️ How to download?
-Beacause this game is still in beta and the game isn't out yet, no installation is provided. 
-With version 1.0 a .exe file will be in the release tab
+The first ever pre-release is out! You are free to try out my game and see what my idea is like... 
+If you go to the **release** tab and click the first tag, you are able to download the _Landsknecht.exe_ file and try it out!
