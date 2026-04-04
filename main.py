@@ -1,5 +1,4 @@
 import pygame as pg
-import time
 import random
 import os
 import sys
@@ -17,7 +16,7 @@ def resource_path(relative_path):
 # --- Global stuff --- #
 gameRunning = True
 currentScreen = "start"
-i = 1
+FPS = 60
 knechtX, knechtY = 0, 0
 drawCountdown = True
 gamePaused = False
@@ -58,26 +57,40 @@ mill_placeholder = [resource_path("assets/img/farm_placeholder.png"), (229 / 2, 
 mill_build = [resource_path("assets/img/mill.png"), (525 / 2, 527 / 2)]
 mill = pg.image.load(mill_placeholder[0]).convert_alpha()
 mill = pg.transform.scale(mill, mill_placeholder[1])
-mill_rect = mill.get_rect(topleft=(260, 350))
+mill_rect = mill.get_rect(topleft=(290, 350))
 
 townhall_placeholder = [resource_path("assets/img/rathaus_placeholder.png"), (575 / 2, 433 / 2)]
 townhall_build = [resource_path("assets/img/rathaus.png"), (575 / 2, 430 / 2)]
 townhall = pg.image.load(townhall_placeholder[0]).convert_alpha()
 townhall = pg.transform.scale(townhall, townhall_placeholder[1])
-townhall_rect = townhall.get_rect(topleft=(175, 50))
+townhall_rect = townhall.get_rect(topleft=(200, 50))
 
 mine_placeholder = [resource_path("assets/img/mine_placeholder.png"), (239 / 2, 238 / 2)]
 mine_build = [resource_path("assets/img/mine.png"), (335 / 2, 333 / 2)]
 mine = pg.image.load(mine_placeholder[0]).convert_alpha()
 mine = pg.transform.scale(mine, mine_placeholder[1])
-ironMine_rect = mine.get_rect(topleft=(100, 550))
-goldMine_rect = mine.get_rect(topleft=(415, 550))
+ironMine_rect = mine.get_rect(topleft=(45, 350))
+goldMine_rect = mine.get_rect(topleft=(535, 350))
+
+knights_placeholder = [resource_path("assets/img/knight_barracks_placeholder.png"), (192 * 1.5, 174 * 1.5)]
+knights_build = [resource_path("assets/img/knight_barracks.png"), (767 / 2, 700 / 2)]
+knights = pg.image.load(knights_placeholder[0]).convert_alpha()
+knights = pg.transform.scale(knights, knights_placeholder[1])
+knights_rect = knights.get_rect(topleft=(450, 525))
+
+archers_placeholder = [resource_path("assets/img/archrers_placeholder.png"), (190 * 1.5, 142 * 1.5)]
+archers_build = [resource_path("assets/img/archers.png"), (191 * 1.5, 141 * 1.5)]
+archers = pg.image.load(archers_placeholder[0]).convert_alpha()
+archers = pg.transform.scale(archers, archers_placeholder[1])
+archers_rect = archers.get_rect(topleft=(50, 550))
 
 buildings = {
-    "Mill": [False, mill_rect],
-    "Townhall": [False, townhall_rect],
-    "Iron mine": [False, ironMine_rect],
-    "Gold Mine": [False, goldMine_rect],
+    "Mill": [False, mill_rect, 0, "Passive", 100],
+    "Townhall": [False, townhall_rect, 0, "Passive", 100],
+    "Iron Mine": [False, ironMine_rect, 0, "Passive", 100],
+    "Gold Mine": [False, goldMine_rect, 0, "Passive", 100],
+    "Knight Barrack": [False, knights_rect, 0, "Passive", 100],
+    "Archer Barrack": [False, archers_rect, 0, "Passive", 100]
 }
 
 # Hoomans
@@ -138,12 +151,17 @@ def drawStart(x, y):
     return start, startBorder, settings, settingsBorder, quit, quitBorder
 
 ### Drawing ToolTip if hovering above building
-def drawToolTip(buildingName, buildStatus, x, y):
-    toolTipRect = pg.Rect(x - 125, y - 20, 250, 100)
-    pg.draw.rect(screen, LIGHTGRAY, toolTipRect, 0, 10)
+def drawToolTip(buildingName, buildStatus, level, workingStatus, health, x, y):
+    toolTipSurface = pg.Surface((250, 155))
+    toolTipSurface.set_alpha(225)
+    toolTipSurface.fill(LIGHTGRAY)
+    screen.blit(toolTipSurface, (x - 125, y - 25))
 
     Text(buildingName, toolTipFont_L, BLACK, x, y, True)
-    Text(f"Building is Build: {buildStatus}", toolTipFont_M, BLACK, x, y + 35, True)
+    Text(f"Build: {buildStatus}", toolTipFont_M, BLACK, x, y + 35, True)
+    Text(f"Level: {level}", toolTipFont_M, BLACK, x, y + 60, True)
+    Text(f"Status: {workingStatus}", toolTipFont_M, BLACK, x, y + 85, True)
+    Text(f"Health: {health}", toolTipFont_M, BLACK, x, y + 110, True)
 
 ### Drawing the main game screen
 def drawGame(countDownLocal):
@@ -155,6 +173,8 @@ def drawGame(countDownLocal):
         screen.blit(townhall, townhall_rect)
         screen.blit(mine, ironMine_rect)
         screen.blit(mine, goldMine_rect)
+        screen.blit(knights, knights_rect)
+        screen.blit(archers, archers_rect)
 
 ### Drawing the settings screen
 def drawSettings():
@@ -219,7 +239,7 @@ while gameRunning:
                 for name, value in buildings.items():
                     if value[1].collidepoint(mousePOS):
                         hoverText = name
-                        hoverValue = value[0]
+                        hoverValue = value
                         break
 
 
@@ -272,9 +292,9 @@ while gameRunning:
             resume, resumeBorder, gameQuit, gameQuitBorder = drawPause()
 
         if hoverText:
-            drawToolTip(hoverText, hoverValue, mousePOS_X, mousePOS_Y)
+            drawToolTip(hoverText, hoverValue[0], hoverValue[2], hoverValue[3], hoverValue[4], mousePOS_X, mousePOS_Y)
 
     refresh()
-    clock.tick(24)  # ~24 FPS
+    clock.tick(FPS)  # FPS
 
 print("Window closed")

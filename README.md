@@ -6,9 +6,15 @@ This is my newest python project using pygame! I try to recreate the popular RTS
 - `conda` -- Virtual enviorement
 - `python` -- Version 3.14 as well as the python extension(s) in VSCode
 - `pygame` -- Visit [pygame.org](https://www.pygame.org/news) to see more!
-- `time` -- Python library for working with time
+- `os & sys` -- Python library for the function _(line 8)_ `resource_path(relative_path)` to create .exe files with correct path
 - `random` -- Python library for working with "randomness"
 - [kenney.nl](https://kenney.nl) -- Library for free assets and Tilemaps
+
+## 🎮 How to play (tutorial)?
+1. First start by clicking _Start_ to play
+2. At first you will see a countdown, so get ready!
+3. The game starts as soon as the countdown is over. You will see your buildings.
+4. _Well this is awkward..._ There isn't more to see right now! So wait for future updates!
 
 ## ⬇️ How to download?
 Beacause this game is still in beta and the game isn't out yet, no installation is provided. 
